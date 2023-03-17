@@ -1,6 +1,6 @@
-# 基于语义的激光雷达点云压缩
+# Semantic-based LiDAR Point Cloud Compression (S-LPCC)
 
-## 安装环境
+## env list
 
 ```
 python 3.8.12
@@ -14,39 +14,40 @@ spconv 1.2.1
 numpngw 0.1.2
 ```
 
-## 帧内压缩
+## intra compression
 
-dataset_path 数据集位置
-seq_name 测试序列 00-11
-seq_len 测试帧数量 100
-depth_width depth_hight 深度图宽度、高度 2048 64
-loss_bit_range 深度图有损比特数量 0-8
+dataset_path: your semanticKITTI dataset path
+seq_name: test seq default 00-11
+seq_len: test frame number default 100
+depth_width&depth_hight: depth width&depth default 2048 64
+loss_bit_range: depth lossly bit 0 - 12
 
 ```python
 python Intra_R_I_GS.py
 ```
 
-## 帧间压缩
+## inter compression
 
-dataset_path 数据集位置
-seq_name 测试序列 00-11
-seq_len 测试帧数量 100
-depth_width depth_hight 深度图宽度、高度 2048 64
-scene_interval 帧间间隔 1
-threshold 运动估计中IPC参数 1
-border_num 边缘残差计算高度 30
-loss_bit_range 深度图有损比特数量 0-8
+dataset_path: your semanticKITTI dataset path
+seq_name: test seq default 00-11
+seq_len: test frame number default 100
+depth_width&depth_hight: depth width&depth default 2048 64
+scene_interval: farme interval default 1
+threshold: move estimation (ICP) parameters default 1
+border_num: border residual calculated height default 30
+loss_bit_range: depth lossly bit 0 - 12
 
 ```python
 python Inter_ME_I_B.py
 ```
 
-## 对比方法
+## Comparison method
 
-### 图像压缩对比方法
+### Image compression comparison
 
-Intra_R 中增加图像保存的命令保存深度图
-对保存深度图使用图像压缩软件进行压缩
+Adding an image save command to **Intra_R** to save depth image. (default numpngw uint16)
+Compression of the saved depth image using image compression software.
+
 ```python
 python Intra_R.py
 ```
@@ -61,7 +62,7 @@ python Intra_R.py
 
 ### Draco 
 
-list_draco_qp 压缩质量等级 [16, 15, 14, 13, 12, 11, 10, 9]
+list_draco_qp: Compression quality grade default [16, 15, 14, 13, 12, 11, 10, 9]
 
 ```python
 python test_comparison_draco.py
@@ -69,15 +70,15 @@ python test_comparison_draco.py
 
 ### MPGE G-PCC
 
-list_mpeg_qp 压缩质量等级 [1000, 500, 250, 100, 50, 20, 15, 10, 5]
-G-PCC压缩点云为整数，因此在质量评估的时候，选择原始点云会偏低
+list_mpeg_qp: Compression quality grade default [1000, 500, 250, 100, 50, 20, 15, 10, 5]
+The G-PCC compressed point cloud is an integer, so the choice of the original point cloud will be low when it comes to quality assessment.
 
 ```python
 python test_comparison_draco.py
 ```
 ### PCL
 
-list_draco_qp 压缩质量等级 [0.7, 0.5, 0.2]
+list_draco_qp: Compression quality grade default [0.7, 0.5, 0.2]
 
 ```python
 python test_comparison_draco.py
@@ -85,10 +86,10 @@ python test_comparison_draco.py
 
 ## 帧内消融实验
 
-* 深度图 R
-* 深度图+语义区分 R+I
-* 深度图+地面模拟 R+GS
-* 深度图+语义区分+地面模拟 R+I+GS
+* Depth R
+* Depth+Insatance-semantic R+I
+* Depth+Ground Simulation R+GS
+* Depth+Insatance-semantic+Ground Simulation R+I+GS
 
 dataset_path 数据集位置
 seq_name 测试序列 00-11
