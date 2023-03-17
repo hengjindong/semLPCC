@@ -1,4 +1,4 @@
-# Semantic-based LiDAR Point Cloud Compression (S-LPCC)
+# Semantic-based LiDAR Point Cloud Compression (semLPCC)
 
 ## env list
 
@@ -52,15 +52,15 @@ Compression of the saved depth image using image compression software.
 python Intra_R.py
 ```
 
-* JPEG "ffmpeg -i input_path -vcodec libopenjpeg output_path"
+* JPEG ffmpeg
 * PNG numpngw
-* Jon2016 FLIF
-* PNGOut pngout
-* WebP
-* BPG bpgenc
-* APNG
+* Jon2016 [FLIF](https://github.com/FLIF-hub/FLIF)
+* [PNGOut](http://www.ardfry.com/pngoutwin)
+* [WebP](http://developers.google.com/speed/webp)
+* [BPG](http://bellard.org/bpg)
+* [APNG](https://sourceforge.net/projects/apngasm)
 
-### Draco 
+### [Draco](htttps://github.com/google/draco) 
 
 list_draco_qp: Compression quality grade default [16, 15, 14, 13, 12, 11, 10, 9]
 
@@ -68,7 +68,7 @@ list_draco_qp: Compression quality grade default [16, 15, 14, 13, 12, 11, 10, 9]
 python test_comparison_draco.py
 ```
 
-### MPGE G-PCC
+### MPGE [G-PCC](https://github.com/MPEGGroup/mpeg-pcc-tmc13)
 
 list_mpeg_qp: Compression quality grade default [1000, 500, 250, 100, 50, 20, 15, 10, 5]
 The G-PCC compressed point cloud is an integer, so the choice of the original point cloud will be low when it comes to quality assessment.
@@ -76,7 +76,7 @@ The G-PCC compressed point cloud is an integer, so the choice of the original po
 ```python
 python test_comparison_draco.py
 ```
-### PCL
+### [PCL](https://github.com/PointCloudLibrary/pcl)
 
 list_draco_qp: Compression quality grade default [0.7, 0.5, 0.2]
 
@@ -84,115 +84,115 @@ list_draco_qp: Compression quality grade default [0.7, 0.5, 0.2]
 python test_comparison_draco.py
 ```
 
-## 帧内消融实验
+## Intra ablation experiments
 
 * Depth R
-* Depth+Insatance-semantic R+I
+* Depth+Semantic R+I
 * Depth+Ground Simulation R+GS
-* Depth+Insatance-semantic+Ground Simulation R+I+GS
+* Depth+Semantic+Ground Simulation R+I+GS
 
-dataset_path 数据集位置
-seq_name 测试序列 00-11
-seq_len 测试帧数量 100
-depth_width depth_hight 深度图宽度、高度 2048 64
-loss_bit_range 深度图有损比特数量 0-8
+dataset_path: your semanticKITTI dataset path
+seq_name: test seq default 00-11
+seq_len: test frame number default 100
+depth_width&depth_hight: depth width&depth default 2048 64
+loss_bit_range: depth lossly bit 0 - 12
 
-### 深度图 R
+### Depth R
 
 ```python
 python Intra_R.py
 ```
 
-### 深度图+语义区分 R+I
+### Depth+Semantic R+I
 
 ```python
 python Intra_R_I.py
 ```
 
-### 深度图+地面模拟 R+GS
+### Depth+Ground Simulation R+GS
 
 ```python
 python Intra_R_GS.py
 ```
 
-### 深度图+语义区分+地面模拟 R+I+GS
+### Depth+Semantic+Ground Simulation R+I+GS
 
 ```python
 python Intra_R_I_GS.py
 ```
 
-## 帧间消融实验
+## Inter ablation experiments
 
-* 运动估计 ME
-* 运动估计+语义区分 ME+I
-* 运动估计+边缘残差 ME+B
-* 运动估计+语义区分+边缘残差 ME+I+B
+* Move Estimation ME
+* Move Estimation+Semantic ME+I
+* Move Estimation+Border Residuals ME+B
+* Move Estimation+Semantic+Border Residuals ME+I+B
 
-dataset_path 数据集位置
-seq_name 测试序列 00-11
-seq_len 测试帧数量 100
-depth_width depth_hight 深度图宽度、高度 2048 64
-loss_bit_range 深度图有损比特数量 0-8
-scene_interval 帧间间隔 1
-threshold 运动估计中icp参数 1
-loss_bit_range 深度图有损比特数量 0-8
+dataset_path: your semanticKITTI dataset path
+seq_name: test seq default 00-11
+seq_len: test frame number default 100
+depth_width&depth_hight: depth width&depth default 2048 64
+scene_interval: farme interval default 1
+threshold: move estimation (ICP) parameters default 1
+border_num: border residual calculated height default 30
+loss_bit_range: depth lossly bit 0 - 12
 
-### 运动估计 ME
+### Move Estimation ME
 
-border_num 边缘残差计算高度 64
+border_num: 64
 ```python
 python Inter_ME_B.py
 ```
 
-### 运动估计+语义区分 ME+I
+### Move Estimation+Semantic ME+I
 
-border_num 边缘残差计算高度 64
+border_num: 64
 ```python
 python Inter_ME_I_B.py
 ```
 
-### 运动估计+边缘残差 ME+B
+### Move Estimation+Border Residuals ME+B
 
-border_num 边缘残差计算高度 30
+border_num: 30
 ```python
 python Inter_ME_B.py
 ```
 
-### 运动估计+语义区分+边缘残差 ME+I+B
+### Move Estimation+Semantic+Border Residuals ME+I+B
 
-border_num 边缘残差计算高度 30
+border_num: 30
 ```python
 python Inter_ME_I_B.py
 ```
 
-## 分割精度实验
+## Segmentation accuracy experiments
 
-使用Cylinder3D进行语义分割
-对压缩后的数据进行格式处理
+Semantic segmentation using **Cylinder3D**.
+Processing of compressed depth data.
 
-1. 保存深度图对应的label
+1. save depth corresponding label
 ```python
 python Perc_label_save.py
 ```
 
-2. 保存不同精度深度图对应的点云
+2. save of depth point clouds with different lossy bit.
 ```python
 python Perception.py
 ```
 
-3. 保存不同精度的语义区分深度图对应的点云
+3. save of after semantic point clouds with different lossy bit.
 ```python
 Perception_I.py
 ```
 
-## 定位时间实验
+## Loaction cost time experiments
 
-直接进行icp点云配准，统计时间
+Direct icp point cloud alignment (based on the icp method in open3d) statistical time spent.
 ```python
 Location.py
 ```
 
-对进行语义区分后的点云进行icp点云配准，统计时间
+after semantic point cloud icp statistical cost time.
 ```python
 python Location_I.py
 ```
